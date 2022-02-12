@@ -1,13 +1,16 @@
-import { listenerCount } from "process";
-import { setFlagsFromString } from "v8";
+import * as vscode from "vscode";
+const config = vscode.workspace.getConfiguration("compareMethodVersionSettings");
+
 
 class Method {
     signature: Signature;
     code: Code;
+    description: string;
 
     constructor(signature: Signature, code : Code) {
         this.signature = signature;
         this.code = code;
+        this.description = "";
     }
 
     toString() {
@@ -17,6 +20,14 @@ class Method {
         value += this.code + "\n";
         value += "###########\n";
         return value;
+    }
+    getCode(): string {
+        let result = "";
+        if(this.description) {
+            result += "\n" + this.description;
+        }
+        result += this.code.code;
+        return result;
     }
 }
 class Signature {
@@ -28,10 +39,10 @@ class Signature {
         this.version = version;
     }
     static createFrom(expr: string) {
-        var regex = /sub ([A-Za-z_]*)(\d*)\s/;
-        var match = expr.match(regex);
+        const regex = /sub ([A-Za-z_]*)(\d*)\s/;
+        const match = expr.match(regex);
         if (match !== null) {
-            let version : string = match[2];
+            const version : string = match[2];
             let versionNum : number;
             if(version === "") {
                 versionNum = 0;
@@ -45,8 +56,8 @@ class Signature {
         }
     }
     static removeVersion(expr: string) {
-        var regex = /(.*sub [A-Za-z_]*)(\d*)(\s.*)/;
-        var match = expr.match(regex);
+        const regex = /(.*sub [A-Za-z_]*)(\d*)(\s.*)/;
+        const match = expr.match(regex);
 
         if (match === null) {
             return expr;
@@ -58,12 +69,20 @@ class Signature {
     toString() {
         return "Name: " + this.name + ", Version: " + this.version;
     }
+    equals(other : Signature | undefined) {
+        if(!other) {
+            return false;
+        }
+
+        return other.name == this.name &&
+            other.version == this.version;
+    }
 }
 class Code {
-    braces: number = 0;
-    started: boolean = false;
-    code: string = "";
-    completed: boolean = false;
+    braces = 0;
+    started = false;
+    code = "";
+    completed = false;
 
     addCode(code: string) {
         if(this.completed) {
@@ -72,7 +91,7 @@ class Code {
 
         let newCode = "";
         let index = 0;
-        for(let character of code) {
+        for(const character of code) {
             newCode += character;
             if(character === "{") {
                 this.braces += 1;
@@ -104,7 +123,7 @@ const processLine = (line: string, method: Method | null, leftover: string, meth
     methods: Array<Method>
  } => {
     if(!method) {
-        let signature = Signature.createFrom(line);
+        const signature = Signature.createFrom(line);
         if(signature) {
             method = new Method(signature, new Code());
             line = Signature.removeVersion(line);
@@ -121,6 +140,7 @@ const processLine = (line: string, method: Method | null, leftover: string, meth
             method = null;
         }
     }
+
     return {
         method,
         leftover,
@@ -128,19 +148,30 @@ const processLine = (line: string, method: Method | null, leftover: string, meth
     };
 };
 
-const processFile = (file : string | Array<string>) => {
-    if(typeof file === "string") {
-        file = file.split("\n");
-    }
+const processFile = (content : string) => {
+    content = content.replace(/(\r\n)|\r/g, "\n");
+    const lines = content.split("\n");
 
     let methods = new Array<Method>();
     let method : Method | null = null;
-    let comments = "";
     let leftover = "";
 
-    for(let line of file) {
+    for(const l in lines) {
+        let line = lines[l];
         line = line.trimEnd();
-        let result = processLine(line, method, leftover, methods);
+
+        const count = methods.length;
+        const result = processLine(line, method, leftover, methods);
+        if(result.methods.length > count) {
+            const newMethod = result.methods[result.methods.length-1];
+            if(newMethod) {
+                const matcher = new RegExp(config.get("methodDescription")+"sub "+newMethod.signature.name + newMethod.signature.version, "m");
+                const description = content.match(matcher);
+                if(description) {
+                    newMethod.description = description[1];
+                }
+            }
+        }
         method = result.method;
         methods = result.methods;
         leftover = result.leftover;
@@ -151,8 +182,8 @@ const processFile = (file : string | Array<string>) => {
 
 const organizeMethods = (methods : Array<Method>) => {
     // Organize method versions so we can grab the top two
-    let organizedMethods : { [key: string] : Array<Method> } = {};
-    for(let method of methods) {
+    const organizedMethods : { [key: string] : Array<Method> } = {};
+    for(const method of methods) {
         if(!method.signature.name) {
             continue;
         }
@@ -167,8 +198,8 @@ const organizeMethods = (methods : Array<Method>) => {
     // Organize method names so the order of the methods so they're in the same place in the file and duplicates come before singletons 
     let organizedKeys = Object.keys(organizedMethods);
     organizedKeys = organizedKeys.sort((a,b) => {
-        let methodsA = organizedMethods[a];
-        let methodsB = organizedMethods[b];
+        const methodsA = organizedMethods[a];
+        const methodsB = organizedMethods[b];
         if(methodsA.length !== methodsB.length) {
             return methodsB.length - methodsA.length;
         } else {
@@ -182,17 +213,17 @@ const organizeMethods = (methods : Array<Method>) => {
 };
 
 export const compareMethodVersions = (document : string) => {
-    let methods = processFile(document);
-    let organizedMethods = organizeMethods(methods);
+    const methods = processFile(document);
+    const organizedMethods = organizeMethods(methods);
 
     let before = "";
     let after = "";
 
-    for(let key of organizedMethods.keys) {
-        let method = organizedMethods.methods[key];
-        after += method[0].code.code;
+    for(const key of organizedMethods.keys) {
+        const method = organizedMethods.methods[key];
+        after += method[0].getCode();
         if(method.length > 1) {
-            before += method[1].code.code;
+            before += method[1].getCode();
         }
     }
     return {
