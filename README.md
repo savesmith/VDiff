@@ -1,5 +1,4 @@
-# Athena Compare Method Versions
-
+# Compare Method Versions
 
 This extension utilizes the pattern of editing a method by copying it and changing its version.
 
