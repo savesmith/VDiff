@@ -1,12 +1,14 @@
 import * as vscode from "vscode";
-import { sanitize } from "./comparer/RegexUtil";
+import { sanitize, buildTextFromRegex } from "./comparer/RegexUtil";
+
 const config = vscode.workspace.getConfiguration("compareMethodVersionSettings");
 
 export const patterns = {
     methodSignaturePattern: config.get<string>("methodSignature") ?? "",
-    methodDescriptionPattern: config.get<string>("methodDescription") ?? ""
+    methodDescriptionPattern: config.get<string>("methodDescription") ?? "",
+    methodVersionPattern: config.get<string>("methodVersion") ?? "",
+    methodVersionExtraction: config.get<string>("methodVersionExtraction") ?? ""
 };
-
 export class Method {
     signature: Signature;
     code: Code;
@@ -68,14 +70,11 @@ export class Signature {
         }
     }
     static removeVersion(expr: string) {
-        const regex = /(.*sub [A-Za-z_]*)(\d*)(\s.*)/;
-        const match = expr.match(regex);
-
-        if (match === null) {
-            return expr;
+        try {
+            return buildTextFromRegex(expr, new RegExp(patterns.methodVersionPattern), patterns.methodVersionExtraction);
         }
-        else {
-            return (match[1] + match[3] + " # " + match[2]); 
+        catch {
+            return expr;
         }
     }
     toString() {
@@ -146,12 +145,10 @@ const processLine = (line: string, method: Method | null, leftover: string, meth
 
     if(method) {
         if(!method.code.completed) {
-            console.log("line: ",JSON.stringify(line));
             leftover = method.code.addCode(line);
         }
 
         if(method.code.completed) {
-            console.log("method: ", JSON.stringify(method.getCode()));
             methods.push(method);
             method = null;
         }

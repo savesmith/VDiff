@@ -39,8 +39,13 @@
         },
         "compareMethodVersionSettings.methodVersion": {
           "type": "string",
-          "default": "(.*sub [A-Za-z_]*)(\\d*)(\\s.*)",
+          "default": "(.*sub [A-Za-z_]*)(\\d{4})(\\d{2})(\\d{2})(\\s.*)",
           "description": "Pattern used to extract the version from a method's signature"
+        },
+        "compareMethodVersionSettings.methodVersionExtraction": {
+          "type": "string",
+          "default": "$1$5 # $3/$4/$2",
+          "description": "Template to refactor the method signature"
         },
         "compareMethodVersionSettings.methodDescription": {
           "type": "string",
