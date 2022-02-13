@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { compareMethodVersions } from "./comparer";
+import { compareMethodVersions } from "./comparer/comparer";
 
 export default class ComparisonProvider implements vscode.TextDocumentContentProvider {
     onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
@@ -21,7 +21,7 @@ export default class ComparisonProvider implements vscode.TextDocumentContentPro
             throw new Error("Need an active editor");
         }
         const { document } = vscode.window.activeTextEditor;
-        const versions = compareMethodVersions(document.getText());
+        const versions = compareMethodVersions(uri.path, document.getText());
 
         if(uri.path.includes("PREV")) {
             return versions.before;

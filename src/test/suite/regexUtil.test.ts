@@ -1,4 +1,4 @@
-import * as RegexUtil from "../../comparer/RegexUtil"; 
+import * as RegexUtil from "../../comparer/regex-util"; 
 import * as assert from 'assert';
 
 suite('Extension Test Suite', () => {
