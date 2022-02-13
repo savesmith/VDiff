@@ -12,14 +12,4 @@ suite('Extension Test Suite', () => {
         assert.strictEqual(result.extract, "# 11/11/2021");
         assert.strictEqual(result.source, "pub Modify {");
     });
-    test('should extract the version', () => {
-        const expr = "pub Modify20211111 {";
-        const result = RegexUtil.extractAndReformat(
-            expr, 
-            /(\d{4}\d{2}\d{2})/,
-            "# $1");
-
-        assert.strictEqual(result.extract, "# 20211111");
-        assert.strictEqual(result.source, "pub Modify {");
-    });
 });
