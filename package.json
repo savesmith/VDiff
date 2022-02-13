@@ -40,15 +40,15 @@
             {
               "filetype": ".pm",
               "signature": "sub ([A-Za-z_]*)(\\d*)\\s",
-              "version": "(.*sub [A-Za-z_]*)(\\d{4})(\\d{2})(\\d{2})(\\s.*)", 
-              "versionExtraction": "$1$5 # $3/$4/$2",
+              "version": "(\\d{4})(\\d{2})(\\d{2})", 
+              "versionExtraction": "  # $2/$3/$1",
               "description": "(^(?:#.*\\n)+)"
             },
             {
               "filetype": ".t",
               "signature": "subtest ([A-Za-z_]*)(\\d{4})(\\d{2})(\\d{2})\\s",
-              "version": "(.*subtest [A-Za-z_]*)(\\d{4})(\\d{2})(\\d{2})(\\s.*)",
-              "versionExtraction": "$1$5 # $3/$4/$2",
+              "version": "(\\d{4})(\\d{2})(\\d{2})",
+              "versionExtraction": "  # $2/$3/$1",
               "description": "(^(?:#.*\\n)+)"
             }
           ]

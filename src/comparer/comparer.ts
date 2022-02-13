@@ -7,9 +7,7 @@ import { sanitize} from "./regex-util";
 import { Signature } from "./signature";
 
 const config = vscode.workspace.getConfiguration("compareMethodVersionSettings");
-let methodPattern : MethodPattern;
-
-export const getMethodPattern = () => methodPattern;
+export let methodPattern : MethodPattern;
 
 const processLine = (line: string, method: Method | null, leftover: string, methods: Array<Method>) 
 : {
@@ -103,7 +101,7 @@ export const compareMethodVersions = (
     filename : string,
     document : string
 ) => {
-    methodPattern = MethodPattern.getPatternsForFile(filename, config) ?? throwError("No method pattern defined for this file type");
+    setMethodPattern(MethodPattern.getPatternsForFile(filename, config) ?? throwError("No method pattern defined for this file type"));
     console.debug(`Method pattern found for {filename}`, methodPattern);
 
     const methods = processFile(document);
@@ -123,4 +121,8 @@ export const compareMethodVersions = (
         before,
         after
     };
+};
+
+export const setMethodPattern = (pattern : MethodPattern) => {
+    methodPattern = pattern;
 };

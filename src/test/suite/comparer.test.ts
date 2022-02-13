@@ -3,6 +3,7 @@ import * as assert from 'assert';
 import { Signature } from "../../comparer/signature";
 import { Method } from "../../comparer/method";
 import { Code } from "../../comparer/code";
+import { MethodPattern } from "../../comparer/method-pattern";
 
 suite('Extension Test Suite', () => {
     [
@@ -25,8 +26,15 @@ suite('Extension Test Suite', () => {
 
     ].forEach((data) => {
         test(`should grab comments with {data.type} signature`, () => {
-            comparer.patterns.methodDescriptionPattern = data.methodDescription;
-            comparer.patterns.methodSignaturePattern = data.methodSignature;
+            comparer.setMethodPattern(new MethodPattern(
+                "",
+                data.methodSignature,
+                "",
+                "",
+                data.methodDescription
+            ));
+            comparer.methodPattern.description = data.methodDescription;
+            comparer.methodPattern.signature = data.methodSignature;
             const signature = Signature.createFrom(data.rawSignature);
             if(!signature) {
                 assert.fail();

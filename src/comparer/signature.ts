@@ -1,5 +1,5 @@
-import { getMethodPattern } from "./comparer";
-import { buildTextFromRegex } from "./regex-util";
+import { methodPattern } from "./comparer";
+import { extractAndReformat } from "./regex-util";
 
 export class Signature {
     name: string;
@@ -12,7 +12,7 @@ export class Signature {
         this.raw = raw;
     }
     static createFrom(expr: string) {
-        const regex = new RegExp(getMethodPattern().signature);
+        const regex = new RegExp(methodPattern.signature);
         const match = expr.match(regex);
         if (match !== null) {
             const version : string = match[2];
@@ -25,7 +25,7 @@ export class Signature {
             const signature = new Signature(match[1], versionNum, expr);
             console.debug("Signature Created", {
                 signature,
-                signaturePattern: getMethodPattern().signature
+                signaturePattern: methodPattern.signature
             });
             return signature;
         }
@@ -35,7 +35,10 @@ export class Signature {
     }
     static removeVersion(expr: string) {
         try {
-            return buildTextFromRegex(expr, new RegExp(getMethodPattern().version), getMethodPattern().versionExtraction);
+            const versionRegex = new RegExp(methodPattern.version);
+            const signature = extractAndReformat(expr, versionRegex, methodPattern.versionExtraction);
+
+            return signature.source + signature.extract;
         }
         catch {
             return expr;
