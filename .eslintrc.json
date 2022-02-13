@@ -25,9 +25,8 @@
             "error",
             4
         ],
-        "quotes": [
-            "error",
-            "double"
+        "prefer-const": [
+            "warn"
         ],
         "semi": [
             "error",

@@ -33,20 +33,20 @@
       "title": "Compare Method Version Settings",
       "properties": {
         "compareMethodVersionSettings.methodSignature": {
-          "type":"string",
-          "default":"sub ([A-Za-z_]*)(\\d*)\\s",
+          "type": "string",
+          "default": "sub ([A-Za-z_]*)(\\d*)\\s",
           "description": "Pattern used to find methods"
         },
         "compareMethodVersionSettings.methodVersion": {
-          "type":"string",
-          "default":"(.*sub [A-Za-z_]*)(\\d*)(\\s.*)",
+          "type": "string",
+          "default": "(.*sub [A-Za-z_]*)(\\d*)(\\s.*)",
           "description": "Pattern used to extract the version from a method's signature"
         },
         "compareMethodVersionSettings.methodDescription": {
-          "type":"string",
-          "default":"(^(?:#.*\\n)+)",
+          "type": "string",
+          "default": "(^(?:#.*\\n)+)",
           "description": "Pattern used to retrieve comments describing a method"
-        } 
+        }
       }
     }
   },
