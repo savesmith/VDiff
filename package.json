@@ -11,20 +11,20 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:athenacomparemethodversions.compareVersions"
+    "onCommand:comparemethodversions.compareVersions"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "athenacomparemethodversions.compareVersions",
+        "command": "comparemethodversions.compareVersions",
         "title": "Compare Method Versions"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "athenacomparemethodversions.compareVersions",
+          "command": "comparemethodversions.compareVersions",
           "title": "Compare Method Versions",
           "group": "3_compare"
         }

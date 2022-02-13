@@ -3,11 +3,11 @@ import ComparisonProvider from "./provider";
 
 // this method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
-    const scheme = "athenacomparemethodversions";
+    const scheme = "comparemethodversions";
     const comparisonProvider = new ComparisonProvider(); 
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(scheme, comparisonProvider));
 
-    const disposable = vscode.commands.registerTextEditorCommand("athenacomparemethodversions.compareVersions", async () => {
+    const disposable = vscode.commands.registerTextEditorCommand("comparemethodversions.compareVersions", async () => {
         if (!vscode.window.activeTextEditor) {
             throw new Error("Requires an active text editor");
         }
