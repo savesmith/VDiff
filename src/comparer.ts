@@ -3,7 +3,7 @@ import { sanitize, buildTextFromRegex } from "./comparer/RegexUtil";
 
 const config = vscode.workspace.getConfiguration("compareMethodVersionSettings");
 
-export const patterns = {
+export let patterns = {
     methodSignaturePattern: config.get<string>("methodSignature") ?? "",
     methodDescriptionPattern: config.get<string>("methodDescription") ?? "",
     methodVersionPattern: config.get<string>("methodVersion") ?? "",
@@ -220,6 +220,13 @@ const organizeMethods = (methods : Array<Method>) => {
 export const compareMethodVersions = (
     document : string
 ) => {
+    patterns = {
+        methodSignaturePattern: config.get<string>("methodSignature") ?? "",
+        methodDescriptionPattern: config.get<string>("methodDescription") ?? "",
+        methodVersionPattern: config.get<string>("methodVersion") ?? "",
+        methodVersionExtraction: config.get<string>("methodVersionExtraction") ?? ""
+    };
+
     const methods = processFile(document);
     const organizedMethods = organizeMethods(methods);
 

@@ -1,8 +1,9 @@
 {
-  "name": "athenacomparemethodversions",
+  "name": "comparemethodversions",
+  "repository": "https://github.com/savesmith/CompareMethodVersions",
   "displayName": "CompareMethodVersions",
   "description": "Compares methods versioned by adding the date to the end of the signature to allow for more readable comparisons",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.64.0"
   },
@@ -64,7 +65,8 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "vpackage": "vsce package"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",
