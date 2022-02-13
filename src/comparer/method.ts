@@ -1,5 +1,5 @@
 import { Code } from "./code";
-import { getMethodPattern } from "./comparer";
+import { methodPattern } from "./comparer";
 import { Signature } from "./signature";
 
 export class Method {
@@ -16,7 +16,7 @@ export class Method {
     }
 
     trySetDescription(content: string) {
-        const pattern = getMethodPattern().description+this.signature.raw;
+        const pattern = methodPattern.description+this.signature.raw;
         const matcher = new RegExp(pattern, "m");
         const description = content.match(matcher);
         if(description) {
