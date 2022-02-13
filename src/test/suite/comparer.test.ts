@@ -1,5 +1,8 @@
-import * as comparer from "../../comparer";
+import * as comparer from "../../comparer/comparer";
 import * as assert from 'assert';
+import { Signature } from "../../comparer/signature";
+import { Method } from "../../comparer/method";
+import { Code } from "../../comparer/code";
 
 suite('Extension Test Suite', () => {
     [
@@ -24,13 +27,13 @@ suite('Extension Test Suite', () => {
         test(`should grab comments with {data.type} signature`, () => {
             comparer.patterns.methodDescriptionPattern = data.methodDescription;
             comparer.patterns.methodSignaturePattern = data.methodSignature;
-            const signature = comparer.Signature.createFrom(data.rawSignature);
+            const signature = Signature.createFrom(data.rawSignature);
             if(!signature) {
                 assert.fail();
             }
-            const method = new comparer.Method(
+            const method = new Method(
                 signature, 
-                new comparer.Code());
+                new Code());
             const result = method.trySetDescription(data.comment + data.rawSignature + data.code);
             assert.strictEqual(result, true);
             assert.strictEqual(method.description, data.comment);
