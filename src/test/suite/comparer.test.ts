@@ -1,12 +1,7 @@
-import * as vscode from "vscode";
-import * as fs from "fs";
 import * as comparer from "../../comparer";
 import * as assert from 'assert';
-import { rawListeners } from "process";
 
 suite('Extension Test Suite', () => {
-    const config = vscode.workspace.getConfiguration("compareMethodVersionSettings");
-
     [
         {
             type: "Perl",
@@ -29,8 +24,12 @@ suite('Extension Test Suite', () => {
         test(`should grab comments with {data.type} signature`, () => {
             comparer.patterns.methodDescriptionPattern = data.methodDescription;
             comparer.patterns.methodSignaturePattern = data.methodSignature;
+            const signature = comparer.Signature.createFrom(data.rawSignature);
+            if(!signature) {
+                assert.fail();
+            }
             const method = new comparer.Method(
-                comparer.Signature.createFrom(data.rawSignature)!, 
+                signature, 
                 new comparer.Code());
             const result = method.trySetDescription(data.comment + data.rawSignature + data.code);
             assert.strictEqual(result, true);

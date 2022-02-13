@@ -1,13 +1,10 @@
 import * as vscode from "vscode";
+import { sanitize } from "./comparer/RegexUtil";
 const config = vscode.workspace.getConfiguration("compareMethodVersionSettings");
 
 export const patterns = {
     methodSignaturePattern: config.get<string>("methodSignature") ?? "",
     methodDescriptionPattern: config.get<string>("methodDescription") ?? ""
-};
-
-const sanitize = (content : string) => {
-    return content.replace(/(\r\n)|\r/g, "\n");
 };
 
 export class Method {
