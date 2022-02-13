@@ -1,26 +1,39 @@
 import * as vscode from "vscode";
 const config = vscode.workspace.getConfiguration("compareMethodVersionSettings");
 
+export const patterns = {
+    methodSignaturePattern: config.get<string>("methodSignature") ?? "",
+    methodDescriptionPattern: config.get<string>("methodDescription") ?? ""
+};
 
-class Method {
+const sanitize = (content : string) => {
+    return content.replace(/(\r\n)|\r/g, "\n");
+};
+
+export class Method {
     signature: Signature;
     code: Code;
     description: string;
 
-    constructor(signature: Signature, code : Code) {
+    trySetDescription(content: string) {
+        const pattern = patterns.methodDescriptionPattern+this.signature.raw;
+        const matcher = new RegExp(pattern, "m");
+        const description = content.match(matcher);
+        if(description) {
+            this.description = description[1];
+            return true;
+        }
+        return false;
+    }
+
+    constructor(
+        signature: Signature,
+        code : Code) {
         this.signature = signature;
         this.code = code;
         this.description = "";
     }
 
-    toString() {
-        let value = "###########\n";
-        value += "Method\n";
-        value += this.signature + "\n";
-        value += this.code + "\n";
-        value += "###########\n";
-        return value;
-    }
     getCode(): string {
         let result = "";
         if(this.description) {
@@ -30,16 +43,18 @@ class Method {
         return result;
     }
 }
-class Signature {
+export class Signature {
     name: string;
     version: number;
+    raw: string;
 
-    constructor(name: string, version: number) {
+    private constructor(name: string, version: number, raw: string) {
         this.name = name;
         this.version = version;
+        this.raw = raw;
     }
     static createFrom(expr: string) {
-        const regex = /sub ([A-Za-z_]*)(\d*)\s/;
+        const regex = patterns.methodSignaturePattern;
         const match = expr.match(regex);
         if (match !== null) {
             const version : string = match[2];
@@ -49,7 +64,7 @@ class Signature {
             } else {
                 versionNum = parseInt(version);
             }
-            return new Signature(match[1], versionNum);
+            return new Signature(match[1], versionNum, expr);
         }
         else {
             return null;
@@ -78,7 +93,7 @@ class Signature {
             other.version == this.version;
     }
 }
-class Code {
+export class Code {
     braces = 0;
     started = false;
     code = "";
@@ -91,6 +106,7 @@ class Code {
 
         let newCode = "";
         let index = 0;
+        const addNewLine = this.started;
         for(const character of code) {
             newCode += character;
             if(character === "{") {
@@ -102,10 +118,11 @@ class Code {
             }
             if(this.started && this.braces === 0) {
                 this.completed = true;
+                newCode += "\n";
             }
             index +=1;
         }
-        this.code += newCode;
+        this.code += (addNewLine ? "\n" : "") + newCode;
 
         if(index !== code.length) {
             return this.code.substring(index);
@@ -132,15 +149,16 @@ const processLine = (line: string, method: Method | null, leftover: string, meth
 
     if(method) {
         if(!method.code.completed) {
-            leftover = method.code.addCode(leftover + "\n" + line);
+            console.log("line: ",JSON.stringify(line));
+            leftover = method.code.addCode(line);
         }
 
         if(method.code.completed) {
+            console.log("method: ", JSON.stringify(method.getCode()));
             methods.push(method);
             method = null;
         }
     }
-
     return {
         method,
         leftover,
@@ -149,7 +167,7 @@ const processLine = (line: string, method: Method | null, leftover: string, meth
 };
 
 const processFile = (content : string) => {
-    content = content.replace(/(\r\n)|\r/g, "\n");
+    content = sanitize(content);
     const lines = content.split("\n");
 
     let methods = new Array<Method>();
@@ -163,14 +181,7 @@ const processFile = (content : string) => {
         const count = methods.length;
         const result = processLine(line, method, leftover, methods);
         if(result.methods.length > count) {
-            const newMethod = result.methods[result.methods.length-1];
-            if(newMethod) {
-                const matcher = new RegExp(config.get("methodDescription")+"sub "+newMethod.signature.name + newMethod.signature.version, "m");
-                const description = content.match(matcher);
-                if(description) {
-                    newMethod.description = description[1];
-                }
-            }
+            result.methods[result.methods.length-1].trySetDescription(content);
         }
         method = result.method;
         methods = result.methods;
@@ -212,7 +223,9 @@ const organizeMethods = (methods : Array<Method>) => {
     };
 };
 
-export const compareMethodVersions = (document : string) => {
+export const compareMethodVersions = (
+    document : string
+) => {
     const methods = processFile(document);
     const organizedMethods = organizeMethods(methods);
 
