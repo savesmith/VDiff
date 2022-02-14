@@ -1,42 +1,43 @@
-import { methodPattern } from "./comparer";
+import { MethodPattern } from "./method-pattern";
 import { extractAndReformat } from "./regex-util";
 
 export class Signature {
     name: string;
     version: number;
     raw: string;
+    pattern: MethodPattern;
 
-    private constructor(name: string, version: number, raw: string) {
+    private constructor(name: string, version: number, raw: string, pattern: MethodPattern) {
         this.name = name;
         this.version = version;
         this.raw = raw;
+        this.pattern = pattern;
     }
-    static createFrom(expr: string) {
-        const regex = new RegExp(methodPattern.signature);
-        const match = expr.match(regex);
-        if (match !== null) {
-            const version : string = match[2];
-            let versionNum : number;
-            if(version === "") {
-                versionNum = 0;
-            } else {
-                versionNum = parseInt(version);
+    static createFrom(expr: string, methodPatterns: Array<MethodPattern>) {
+        for(const pattern of methodPatterns) {
+            const regex = new RegExp(pattern.signature);
+            const match = expr.match(regex);
+            if (match !== null) {
+                const version : string = match[2];
+
+                let versionNum : number;
+                if(version === "") {
+                    versionNum = 0;
+                } else {
+                    versionNum = parseInt(version);
+                }
+                const signature = new Signature(match[1], versionNum, expr, pattern);
+                console.debug("Signature Created", signature);
+
+                return signature;
             }
-            const signature = new Signature(match[1], versionNum, expr);
-            console.debug("Signature Created", {
-                signature,
-                signaturePattern: methodPattern.signature
-            });
-            return signature;
         }
-        else {
-            return null;
-        }
+        return null;
     }
-    static removeVersion(expr: string) {
+    removeVersion(expr: string) {
         try {
-            const versionRegex = new RegExp(methodPattern.version);
-            const signature = extractAndReformat(expr, versionRegex, methodPattern.versionExtraction);
+            const versionRegex = new RegExp(this.pattern.version);
+            const signature = extractAndReformat(expr, versionRegex, this.pattern.versionExtraction);
 
             return signature.source + signature.extract;
         }
