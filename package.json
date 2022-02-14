@@ -1,5 +1,5 @@
 {
-  "name": "comparemethodversions",
+  "name": "vdiff",
   "repository": "https://github.com/savesmith/VDiff",
   "displayName": "VDiff",
   "description": "Compares methods versioned by adding the date to the end of the signature to allow for more readable comparisons",
