@@ -14,7 +14,6 @@ export const extractAndReformat = (
     if(r == null) {
         throw new Error("Expression does not match pattern");
     }
-    console.log(r);
     const source = expr.replace(pattern, "");
     const extract = r[0].replace(pattern, template);
     return {
