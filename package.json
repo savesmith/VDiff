@@ -3,9 +3,9 @@
   "repository": "https://github.com/savesmith/VDiff",
   "displayName": "vDiff",
   "description": "Generates a diff for a file's versioned methods. (e.g. hello2020_01_01 -> hello2022_02_01)",
-  "icon": "https://github.com/savesmith/VDiff/blob/main/Vdiff-Icon.png",
+  "icon": "https://raw.githubusercontent.com/savesmith/VDiff/main/Vdiff-Icon.png",
   "publisher": "SavyNotSavvy",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.64.0"
   },
