@@ -1,8 +1,10 @@
 {
   "name": "comparemethodversions",
-  "repository": "https://github.com/savesmith/CompareMethodVersions",
-  "displayName": "CompareMethodVersions",
+  "repository": "https://github.com/savesmith/VDiff",
+  "displayName": "VDiff",
   "description": "Compares methods versioned by adding the date to the end of the signature to allow for more readable comparisons",
+  "icon": "Vdiff-Icon.png",
+  "publisher": "SavyNotSavvy",
   "version": "0.0.6",
   "engines": {
     "vscode": "^1.64.0"
@@ -11,41 +13,41 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:comparemethodversions.compareActiveFileVersions",
-    "onCommand:comparemethodversions.compareSelectedFileVersions"
+    "onCommand:vdiff.compareActiveFileVersions",
+    "onCommand:vdiff.compareSelectedFileVersions"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "comparemethodversions.compareActiveFileVersions",
-        "title": "Compare Method Versions"
+        "command": "vdiff.compareActiveFileVersions",
+        "title": "Version Diff"
       },
       {
-        "command": "comparemethodversions.compareSelectedFileVersions",
-        "title": "Compare Method Versions"
+        "command": "vdiff.compareSelectedFileVersions",
+        "title": "Version Diff"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "comparemethodversions.compareActiveFileVersions",
-          "title": "Compare Method Versions",
+          "command": "vdiff.compareActiveFileVersions",
+          "title": "Version Diff",
           "group": "3_compare"
         }
       ],
       "explorer/context": [
         {
-          "command": "comparemethodversions.compareSelectedFileVersions",
-          "title": "Compare Method Versions",
-          "group": "compareMethodVersions"
+          "command": "vdiff.compareSelectedFileVersions",
+          "title": "Version Diff",
+          "group": "vdiff"
         }
       ]
     },
     "configuration": {
-      "title": "Compare Method Version Settings",
+      "title": "VDiff",
       "properties": {
-        "compareMethodVersionSettings.methodPatterns": {
+        "vdiff.methodPatterns": {
           "type":"array",
           "markdownDescription": "Patterns used to find and manipulate methods",
           "default": [
