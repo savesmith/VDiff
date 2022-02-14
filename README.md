@@ -3,9 +3,6 @@ vDiff generates a diff of a file's versioned methods. To perserve legacy code, w
 
 ![vDiff_Example-1644822622867](https://user-images.githubusercontent.com/21265432/153816493-b20566b0-d1f7-4bac-8561-c6148418900e.gif)
 
-## Download
-This extension is currently in development and not published to vscode marketplace. If you'd like to use and early and give any feedback please download the latest version vdiff.vsix version.
-
 ## How to use
 - Right click on your active editor and select _Version Diff_
 - Right click on a file in the explorer and select _Version Diff_
