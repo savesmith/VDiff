@@ -3,7 +3,7 @@
   "repository": "https://github.com/savesmith/CompareMethodVersions",
   "displayName": "CompareMethodVersions",
   "description": "Compares methods versioned by adding the date to the end of the signature to allow for more readable comparisons",
-  "version": "0.0.2",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.64.0"
   },
@@ -11,22 +11,34 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:comparemethodversions.compareVersions"
+    "onCommand:comparemethodversions.compareActiveFileVersions",
+    "onCommand:comparemethodversions.compareSelectedFileVersions"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "comparemethodversions.compareVersions",
+        "command": "comparemethodversions.compareActiveFileVersions",
+        "title": "Compare Method Versions"
+      },
+      {
+        "command": "comparemethodversions.compareSelectedFileVersions",
         "title": "Compare Method Versions"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "comparemethodversions.compareVersions",
+          "command": "comparemethodversions.compareActiveFileVersions",
           "title": "Compare Method Versions",
           "group": "3_compare"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "comparemethodversions.compareSelectedFileVersions",
+          "title": "Compare Method Versions",
+          "group": "compareMethodVersions"
         }
       ]
     },
