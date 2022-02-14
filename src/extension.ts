@@ -3,11 +3,11 @@ import ComparisonProvider from "./provider";
 
 // this method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
-    const scheme = "comparemethodversions";
+    const scheme = "vdiff";
     const comparisonProvider = new ComparisonProvider(); 
 
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider(scheme, comparisonProvider));
-    context.subscriptions.push(vscode.commands.registerTextEditorCommand("comparemethodversions.compareActiveFileVersions", async () => {
+    context.subscriptions.push(vscode.commands.registerTextEditorCommand("vdiff.compareActiveFileVersions", async () => {
         if (!vscode.window.activeTextEditor) {
             throw new Error("Requires an active text editor");
         }
@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.executeCommand("vscode.diff", prevURI, currURI);
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand("comparemethodversions.compareSelectedFileVersions", async (fileUri: vscode.Uri) => {
+    context.subscriptions.push(vscode.commands.registerCommand("vdiff.compareSelectedFileVersions", async (fileUri: vscode.Uri) => {
         try {
             await comparisonProvider.setDocument(fileUri);
 
