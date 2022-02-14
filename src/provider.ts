@@ -27,17 +27,17 @@ export default class ComparisonProvider implements vscode.TextDocumentContentPro
      * @param {vscode.Uri} uri - a fake uri
      * @returns {string} - text
      **/
-    public provideTextDocumentContent (uri : vscode.Uri) : string {
+    public provideTextDocumentContent (uri : vscode.Uri) : string | undefined {
         if(!this.document) {
             return "Document not found";
         }
         const versions = compareMethodVersions(uri.path, this.document);
 
         if(uri.path.includes("PREV")) {
-            return versions.before;
+            return versions?.before;
         }
         if(uri.path.includes("CURRENT")) {
-            return versions.after;
+            return versions?.after;
         }
         return "ERROR!";
     }
