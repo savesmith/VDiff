@@ -1,3 +1,4 @@
+import moment = require("moment");
 import * as vscode from "vscode";
 import { Code } from "./code";
 import { throwError } from "./error-util";
@@ -82,7 +83,25 @@ const organizeMethods = (methods : Array<Method>) => {
             organizedMethods[method.signature.name] = new Array<Method>();
         }
         organizedMethods[method.signature.name].push(method);
-        organizedMethods[method.signature.name] = organizedMethods[method.signature.name].sort((a,b) => b.signature.version - a.signature.version);
+        organizedMethods[method.signature.name] = organizedMethods[method.signature.name].sort((a,b) => {
+            const versionType = a.signature.pattern.versionType;
+            if(versionType == "date") {
+                const a_date = moment(a.signature.version, a.signature.pattern.versionDateFormat);
+                const b_date = moment(b.signature.version, b.signature.pattern.versionDateFormat);
+                
+                return b_date.diff(a_date);
+            }
+            else if(versionType == "number") {
+                const a_num = parseInt(a.signature.version);
+                const b_num = parseInt(b.signature.version);
+
+                return b_num - a_num;
+            }
+            else if(versionType == "string") {
+                b.signature.version.localeCompare(a.signature.version);
+            }
+            return -1;
+        });
     }
 
     // Organize method names so the order of the methods so they're in the same place in the file and duplicates come before singletons 

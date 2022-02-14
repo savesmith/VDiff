@@ -3,11 +3,11 @@ import { extractAndReformat } from "./regex-util";
 
 export class Signature {
     name: string;
-    version: number;
+    version: string;
     raw: string;
     pattern: MethodPattern;
 
-    private constructor(name: string, version: number, raw: string, pattern: MethodPattern) {
+    private constructor(name: string, version: string, raw: string, pattern: MethodPattern) {
         this.name = name;
         this.version = version;
         this.raw = raw;
@@ -19,14 +19,7 @@ export class Signature {
             const match = expr.match(regex);
             if (match !== null) {
                 const version : string = match[2];
-
-                let versionNum : number;
-                if(version === "") {
-                    versionNum = 0;
-                } else {
-                    versionNum = parseInt(version);
-                }
-                const signature = new Signature(match[1], versionNum, expr, pattern);
+                const signature = new Signature(match[1], version, expr, pattern);
                 console.debug("Signature Created", signature);
 
                 return signature;
