@@ -6,7 +6,7 @@ import { MethodPattern } from "./method-pattern";
 import { sanitize} from "./regex-util";
 import { Signature } from "./signature";
 
-const config = vscode.workspace.getConfiguration("compareMethodVersionSettings");
+const config = vscode.workspace.getConfiguration("vdiff");
 export let methodPattern : MethodPattern;
 
 const processLine = (line: string, method: Method | null, leftover: string, methods: Array<Method>) 

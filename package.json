@@ -1,11 +1,11 @@
 {
   "name": "vdiff",
   "repository": "https://github.com/savesmith/VDiff",
-  "displayName": "VDiff",
-  "description": "Compares methods versioned by adding the date to the end of the signature to allow for more readable comparisons",
-  "icon": "Vdiff-Icon.png",
+  "displayName": "vDiff",
+  "description": "Generates a diff for a file's versioned methods. (e.g. hello2020_01_01 -> hello2022_02_01)",
+  "icon": "https://github.com/savesmith/VDiff/blob/main/Vdiff-Icon.png",
   "publisher": "SavyNotSavvy",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "engines": {
     "vscode": "^1.64.0"
   },
@@ -45,7 +45,7 @@
       ]
     },
     "configuration": {
-      "title": "VDiff",
+      "title": "vDiff",
       "properties": {
         "vdiff.methodPatterns": {
           "type":"array",
