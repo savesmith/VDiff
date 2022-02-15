@@ -41,4 +41,4 @@ Here is the configuration for the example gif
 ]
 ```
 
-You can add more method patterns to support other file types. Currently only one pattern for a file is supported, but it is a feature expected to be added.
+You can add more method patterns to support other file types or version configurations
