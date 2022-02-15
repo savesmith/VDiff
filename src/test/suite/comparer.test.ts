@@ -33,17 +33,15 @@ suite('Extension Test Suite', () => {
                 "",
                 data.methodDescription
             ));
-<<<<<<< HEAD
-            const signature = Signature.createFrom(data.rawSignature);
-=======
             const signature = Signature.createFrom(data.rawSignature, methodPatterns);
->>>>>>> 96b463ca4bd1a2c2763bac7152b4fdaff8e08b5c
             if(!signature) {
                 assert.fail();
             }
             const method = new Method(
                 signature, 
-                new Code());
+                new Code(),
+                "test.pm",
+                false);
             const result = method.trySetDescription(data.comment + data.rawSignature + data.code);
             assert.strictEqual(result, true);
             assert.strictEqual(method.description, data.comment);

@@ -22,7 +22,7 @@ export default class ComparisonProvider implements vscode.TextDocumentContentPro
      * @returns {string} - text
      **/
     public async provideTextDocumentContent (uri : vscode.Uri) : Promise<string> {
-        const versions = await compareMethodVersions(uri);
+        const versions = await compareMethodVersions(this.uri);
 
         if(uri.path.includes("PREV")) {
             return versions?.before;

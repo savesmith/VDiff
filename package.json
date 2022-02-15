@@ -65,18 +65,19 @@
             {
               "filetype": "greetings.pm",
               "signature": "sub ([A-Za-z_]*)(\\d*)\\s",
-              "version": "(\\d{4})(\\d{2})(\\d{2})", 
-              "versionExtraction": "  # $2/$3/$1",
+              "version": "(\\d{4})(\\d{2})(\\d{2})",
+              "versionExtraction": "$2/$3/$1",
               "description": "(^(?:#.*\\n)+)",
               "compareWith": [
                 "__greetings__.pm"
-              ]
+              ],
+              "versionType": "number"
             },
             {
               "filetype": ".pm",
               "signature": "sub ([A-Za-z_]*)(\\d{4})(\\d{2})(\\d{2})\\s",
               "version": "(\\d{4})(\\d{2})(\\d{2})",
-              "versionExtraction": "  # $2/$3/$1",
+              "versionExtraction": "$2/$3/$1",
               "description": "(^(?:#.*\\n)+)",
               "versionType": "number"
             },
@@ -84,7 +85,7 @@
               "filetype": ".pm",
               "signature": "public void ([A-Za-z_]*)((\\d{2})_(\\d{2}))\\s",
               "version": "(\\d{2})_(\\d{2})",
-              "versionExtraction": "  # $1/20$2",
+              "versionExtraction": "$1/20$2",
               "description": "(^(?:#.*\\n)+)",
               "versionType": "date",
               "versionDateFormat": "mm_yy"
@@ -93,7 +94,7 @@
               "filetype": ".t",
               "signature": "subtest ([A-Za-z_]*)(\\d{4})(\\d{2})(\\d{2})\\s",
               "version": "(\\d{4})(\\d{2})(\\d{2})",
-              "versionExtraction": "  # $2/$3/$1",
+              "versionExtraction": "$2/$3/$1",
               "description": "(^(?:#.*\\n)+)"
             }
           ]
@@ -121,6 +122,7 @@
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.11.0",
     "@vscode/test-electron": "^2.0.3",
+    "comment-patterns": "^0.12.2",
     "eslint": "^8.6.0",
     "eslint-plugin-react": "^7.28.0",
     "glob": "^7.2.0",

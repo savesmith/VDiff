@@ -29,15 +29,16 @@ export class Signature {
         }
         return null;
     }
-    removeVersion(expr: string) {
+    extractVersion(expr: string) {
         try {
             const versionRegex = new RegExp(this.pattern.version);
-            const signature = extractAndReformat(expr, versionRegex, this.pattern.versionExtraction);
-
-            return signature.source + signature.extract;
+            return extractAndReformat(expr, versionRegex, this.pattern.versionExtraction);
         }
         catch {
-            return expr;
+            return {
+                source: expr,
+                extract: null
+            };
         }
     }
     toString() {
