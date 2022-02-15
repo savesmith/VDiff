@@ -4,8 +4,8 @@ vDiff generates a diff of a file's versioned methods. To perserve legacy code, w
 ![vDiff_Example-1644822622867](https://user-images.githubusercontent.com/21265432/153816493-b20566b0-d1f7-4bac-8561-c6148418900e.gif)
 
 ## How to use
-- Right click on your active editor and select _Version Diff_
-- Right click on a file in the explorer and select _Version Diff_
+- Configure your file's versioning by defining its methodPattern in settings. The first perl example shown is configured by default. 
+- Right click on your active editor or a file in the explorer and select _Version Diff_
 
 ## Settings
 
@@ -17,10 +17,11 @@ Here is the configuration for the example gif
 "vdiff.methodPatterns": [
   {
     "filetype": ".pm", // The file extension that this pattern applies to
-    "signature": "sub ([A-Za-z_]*)(\\d*)\\s",// Regex expression that matches a method signature, with a capture group for the name and version
+    "signature": "sub ([A-Za-z_]*)(\\d{4})(\\d{2})(\\d{2})\\s",// Regex expression that matches a method signature, with a capture group for the name and version
     "version": "(\\d{4})(\\d{2})(\\d{2})", // Regex expression for grabbing the version, with capture groups that are supplied to "versionExtraction" to add a comment
-    "versionExtraction: "  # $2/$3/$1", // The template "version" uses to create a version comment
-    "description": "(^(?:#.*\\n)+)" // Regex expression for grabbing the comments before a method. 
+    "versionExtraction: "$2/$3/$1", // The template "version" uses to add an inline comment describing the version
+    "description": "(^(?:#.*\\n)+)", // Regex expression for grabbing the comments before a method. 
+    "versionType": "number" // the version type, it can be number, text, or date.
   }
 ]
 ```
