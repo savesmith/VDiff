@@ -5,7 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.2.0] - 2022-02-15
+- Comparison between methods in another file
 - Multiple method patterns for the same file type
+- versionType property with the formats: number, text, date.
+- versionDateFormat for versionType date to order version by the date
+- versionExtraction no longer needs need to handle the comment
 
 ## [0.1.0] - 2022-02-14
 Experimental Release. Feedback is greatly appreciated and will be addressed promptly.
