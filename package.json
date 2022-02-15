@@ -63,6 +63,16 @@
           "markdownDescription": "Patterns used to find and manipulate methods",
           "default": [
             {
+              "filetype": "greetings.pm",
+              "signature": "sub ([A-Za-z_]*)(\\d*)\\s",
+              "version": "(\\d{4})(\\d{2})(\\d{2})", 
+              "versionExtraction": "  # $2/$3/$1",
+              "description": "(^(?:#.*\\n)+)",
+              "compareWith": [
+                "__greetings__.pm"
+              ]
+            },
+            {
               "filetype": ".pm",
               "signature": "sub ([A-Za-z_]*)(\\d*)\\s",
               "version": "(\\d{4})(\\d{2})(\\d{2})", 

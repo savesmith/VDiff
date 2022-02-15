@@ -97,13 +97,29 @@ const organizeMethods = (methods : Array<Method>) => {
     };
 };
 
-export const compareMethodVersions = (
-    filename : string,
-    document : string
+export const compareMethodVersions = async (
+    uri : vscode.Uri
 ) => {
-    setMethodPattern(MethodPattern.getPatternsForFile(filename, config) ?? throwError("No method pattern defined for this file type"));
-    console.debug(`Method pattern found for {filename}`, methodPattern);
+    // Get File Data
+    let filename = uri.path;
+    let document;
+    await vscode.workspace.openTextDocument(uri.path).then(doc => {
+        document = doc.getText();
+    });
+    document = document ?? throwError("Unable to read file: " + uri.path.toString());
 
+    // Get Settings
+    setMethodPattern(MethodPattern.getPatternsForFile(filename, config) ?? throwError("No method pattern defined for this file type"));
+
+    // Get Additional Data
+    if(methodPattern.compareWith) {
+        let externalDocuments = [];
+        for(let path in methodPattern.compareWith) {
+            console.log(path);
+        }
+    }
+
+    // Build Versions
     const methods = processFile(document);
     const organizedMethods = organizeMethods(methods);
 

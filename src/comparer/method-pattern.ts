@@ -6,18 +6,21 @@ export class MethodPattern {
     description: string | undefined;
     version: string;
     versionExtraction: string;
+    compareWith: Array<string> | undefined;
 
     constructor(
         filetype: string, 
         signature: string,
         version: string,
         versionExtraction: string,
-        description?: string) {
+        description?: string,
+        compareWith?: Array<string>) {
         this.filetype = filetype;
         this.signature = signature;
         this.description =  description;
         this.version =  version;
         this.versionExtraction = versionExtraction;
+        this.compareWith = compareWith;
     }
 
     static getPatternsForFile(file : string, config : WorkspaceConfiguration) {

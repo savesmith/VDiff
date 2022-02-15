@@ -33,8 +33,6 @@ suite('Extension Test Suite', () => {
                 "",
                 data.methodDescription
             ));
-            comparer.methodPattern.description = data.methodDescription;
-            comparer.methodPattern.signature = data.methodSignature;
             const signature = Signature.createFrom(data.rawSignature);
             if(!signature) {
                 assert.fail();
