@@ -15,7 +15,7 @@
   "displayName": "vDiff",
   "description": "Generates a diff for a file's versioned methods. (e.g. hello2020_01_01 -> hello2022_02_01)",
   "icon": "Vdiff-Icon.png",
-  "publisher": "SavyNotSavvy",
+  "publisher": "savysolutions",
   "version": "0.1.0",
   "engines": {
     "vscode": "^1.64.0"
@@ -59,7 +59,7 @@
       "title": "vDiff",
       "properties": {
         "vdiff.methodPatterns": {
-          "type":"array",
+          "type": "array",
           "markdownDescription": "Patterns used to find and manipulate methods",
           "default": [
             {
@@ -74,10 +74,20 @@
             },
             {
               "filetype": ".pm",
-              "signature": "sub ([A-Za-z_]*)(\\d*)\\s",
-              "version": "(\\d{4})(\\d{2})(\\d{2})", 
+              "signature": "sub ([A-Za-z_]*)(\\d{4})(\\d{2})(\\d{2})\\s",
+              "version": "(\\d{4})(\\d{2})(\\d{2})",
               "versionExtraction": "  # $2/$3/$1",
-              "description": "(^(?:#.*\\n)+)"
+              "description": "(^(?:#.*\\n)+)",
+              "versionType": "number"
+            },
+            {
+              "filetype": ".pm",
+              "signature": "public void ([A-Za-z_]*)((\\d{2})_(\\d{2}))\\s",
+              "version": "(\\d{2})_(\\d{2})",
+              "versionExtraction": "  # $1/20$2",
+              "description": "(^(?:#.*\\n)+)",
+              "versionType": "date",
+              "versionDateFormat": "mm_yy"
             },
             {
               "filetype": ".t",
@@ -119,5 +129,8 @@
     "typescript": "^4.5.4",
     "webpack": "^5.66.0",
     "webpack-cli": "^4.9.1"
+  },
+  "dependencies": {
+    "moment": "^2.29.1"
   }
 }

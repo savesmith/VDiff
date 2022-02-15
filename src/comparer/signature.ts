@@ -1,7 +1,6 @@
-import { methodPattern } from "./comparer";
+import { MethodPattern } from "./method-pattern";
 import { extractAndReformat } from "./regex-util";
 import * as log from "./log";
-import { MethodPattern } from "./method-pattern";
 
 
 export class Signature {
@@ -30,10 +29,10 @@ export class Signature {
         }
         return null;
     }
-    static removeVersion(expr: string) {
+    removeVersion(expr: string) {
         try {
-            const versionRegex = new RegExp(methodPattern.version);
-            const signature = extractAndReformat(expr, versionRegex, methodPattern.versionExtraction);
+            const versionRegex = new RegExp(this.pattern.version);
+            const signature = extractAndReformat(expr, versionRegex, this.pattern.versionExtraction);
 
             return signature.source + signature.extract;
         }

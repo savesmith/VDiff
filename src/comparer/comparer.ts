@@ -1,3 +1,4 @@
+import moment = require("moment");
 import * as vscode from "vscode";
 import { Code } from "./code";
 import { throwError } from "./error-util";
@@ -7,19 +8,24 @@ import { sanitize} from "./regex-util";
 import { Signature } from "./signature";
 
 const config = vscode.workspace.getConfiguration("vdiff");
-export let methodPattern : MethodPattern;
+export let methodPatterns : Array<MethodPattern>;
 
-const processLine = (line: string, method: Method | null, leftover: string, methods: Array<Method>) 
+const processLine = (
+    line: string,
+    method: Method | null,
+    leftover: string,
+    methods: Array<Method>,
+    methodPatterns: Array<MethodPattern>) 
 : {
     method: Method | null,
     leftover: string,
     methods: Array<Method>
  } => {
     if(!method) {
-        const signature = Signature.createFrom(line);
+        const signature = Signature.createFrom(line, methodPatterns);
         if(signature) {
             method = new Method(signature, new Code());
-            line = Signature.removeVersion(line);
+            line = method.signature.removeVersion(line);
         }
     }
 
@@ -40,7 +46,7 @@ const processLine = (line: string, method: Method | null, leftover: string, meth
     };
 };
 
-const processFile = (content : string) => {
+const processFile = (content : string, methodPatterns : Array<MethodPattern>) => {
     content = sanitize(content);
     const lines = content.split("\n");
 
@@ -53,7 +59,7 @@ const processFile = (content : string) => {
         line = line.trimEnd();
 
         const count = methods.length;
-        const result = processLine(line, method, leftover, methods);
+        const result = processLine(line, method, leftover, methods, methodPatterns);
         if(result.methods.length > count) {
             result.methods[result.methods.length-1].trySetDescription(content);
         }
@@ -77,7 +83,25 @@ const organizeMethods = (methods : Array<Method>) => {
             organizedMethods[method.signature.name] = new Array<Method>();
         }
         organizedMethods[method.signature.name].push(method);
-        organizedMethods[method.signature.name] = organizedMethods[method.signature.name].sort((a,b) => b.signature.version - a.signature.version);
+        organizedMethods[method.signature.name] = organizedMethods[method.signature.name].sort((a,b) => {
+            const versionType = a.signature.pattern.versionType;
+            if(versionType == "date") {
+                const a_date = moment(a.signature.version, a.signature.pattern.versionDateFormat);
+                const b_date = moment(b.signature.version, b.signature.pattern.versionDateFormat);
+                
+                return b_date.diff(a_date);
+            }
+            else if(versionType == "number") {
+                const a_num = parseInt(a.signature.version);
+                const b_num = parseInt(b.signature.version);
+
+                return b_num - a_num;
+            }
+            else if(versionType == "string") {
+                b.signature.version.localeCompare(a.signature.version);
+            }
+            return -1;
+        });
     }
 
     // Organize method names so the order of the methods so they're in the same place in the file and duplicates come before singletons 
@@ -112,15 +136,17 @@ export const compareMethodVersions = async (
     setMethodPattern(MethodPattern.getPatternsForFile(filename, config) ?? throwError("No method pattern defined for this file type"));
 
     // Get Additional Data
-    if(methodPattern.compareWith) {
-        let externalDocuments = [];
-        for(let path in methodPattern.compareWith) {
-            console.log(path);
+    for(const methodPattern of methodPatterns) {
+        if(methodPattern.compareWith) {
+            let externalDocuments = [];
+            for(let path in methodPattern.compareWith) {
+                console.log(path);
+            }
         }
     }
 
     // Build Versions
-    const methods = processFile(document);
+    const methods = processFile(document, methodPatterns);
     const organizedMethods = organizeMethods(methods);
 
     let before = "";
@@ -139,6 +165,6 @@ export const compareMethodVersions = async (
     };
 };
 
-export const setMethodPattern = (pattern : MethodPattern) => {
-    methodPattern = pattern;
+export const setMethodPattern = (patterns : Array<MethodPattern>) => {
+    methodPatterns = patterns;
 };

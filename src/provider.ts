@@ -25,10 +25,10 @@ export default class ComparisonProvider implements vscode.TextDocumentContentPro
         const versions = await compareMethodVersions(uri);
 
         if(uri.path.includes("PREV")) {
-            return versions.before;
+            return versions?.before;
         }
         if(uri.path.includes("CURRENT")) {
-            return versions.after;
+            return versions?.after;
         }
         return "ERROR!";
     }

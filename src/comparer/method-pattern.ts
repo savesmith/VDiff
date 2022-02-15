@@ -5,8 +5,11 @@ export class MethodPattern {
     signature: string;
     description: string | undefined;
     version: string;
+    versionType: string; // date, number, text
+    versionDateFormat: string | undefined; // 'mm_yyyy'
     versionExtraction: string;
     compareWith: Array<string> | undefined;
+    files: Array<string> | string | undefined;
 
     constructor(
         filetype: string, 
@@ -14,17 +17,23 @@ export class MethodPattern {
         version: string,
         versionExtraction: string,
         description?: string,
-        compareWith?: Array<string>) {
+        compareWith?: Array<string>,
+        versionType?: string,
+        files?: Array<string> | string,
+        versionDateFormat?: string) {
         this.filetype = filetype;
         this.signature = signature;
         this.description =  description;
         this.version =  version;
         this.versionExtraction = versionExtraction;
         this.compareWith = compareWith;
+        this.files = files;
+        this.versionType = versionType ?? "text";
+        this.versionDateFormat = versionDateFormat;
     }
 
     static getPatternsForFile(file : string, config : WorkspaceConfiguration) {
         const patterns = config.get<Array<MethodPattern>>("methodPatterns");
-        return patterns?.find(pattern => file.includes(pattern.filetype));
+        return patterns?.filter(pattern => file.includes(pattern.filetype));
     }
 }
