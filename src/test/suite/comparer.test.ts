@@ -39,7 +39,9 @@ suite('Extension Test Suite', () => {
             }
             const method = new Method(
                 signature, 
-                new Code());
+                new Code(),
+                "test.pm",
+                false);
             const result = method.trySetDescription(data.comment + data.rawSignature + data.code);
             assert.strictEqual(result, true);
             assert.strictEqual(method.description, data.comment);

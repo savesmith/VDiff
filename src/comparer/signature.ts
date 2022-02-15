@@ -1,5 +1,7 @@
 import { MethodPattern } from "./method-pattern";
 import { extractAndReformat } from "./regex-util";
+import * as log from "./log";
+
 
 export class Signature {
     name: string;
@@ -20,22 +22,23 @@ export class Signature {
             if (match !== null) {
                 const version : string = match[2];
                 const signature = new Signature(match[1], version, expr, pattern);
-                console.debug("Signature Created", signature);
+                log.debug("Signature Created", signature);
 
                 return signature;
             }
         }
         return null;
     }
-    removeVersion(expr: string) {
+    extractVersion(expr: string) {
         try {
             const versionRegex = new RegExp(this.pattern.version);
-            const signature = extractAndReformat(expr, versionRegex, this.pattern.versionExtraction);
-
-            return signature.source + signature.extract;
+            return extractAndReformat(expr, versionRegex, this.pattern.versionExtraction);
         }
         catch {
-            return expr;
+            return {
+                source: expr,
+                extract: null
+            };
         }
     }
     toString() {

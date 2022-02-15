@@ -1,5 +1,6 @@
 import moment = require("moment");
 import * as vscode from "vscode";
+import { getFileText } from "../util/file-util";
 import { Code } from "./code";
 import { throwError } from "./error-util";
 import { Method } from "./method";
@@ -15,7 +16,9 @@ const processLine = (
     method: Method | null,
     leftover: string,
     methods: Array<Method>,
-    methodPatterns: Array<MethodPattern>) 
+    methodPatterns: Array<MethodPattern>,
+    filename: string,
+    isExternal = false) 
 : {
     method: Method | null,
     leftover: string,
@@ -24,8 +27,8 @@ const processLine = (
     if(!method) {
         const signature = Signature.createFrom(line, methodPatterns);
         if(signature) {
-            method = new Method(signature, new Code());
-            line = method.signature.removeVersion(line);
+            method = new Method(signature, new Code(), filename, isExternal);
+            line = method.reformatSignature(line);
         }
     }
 
@@ -46,7 +49,7 @@ const processLine = (
     };
 };
 
-const processFile = (content : string, methodPatterns : Array<MethodPattern>) => {
+const processFile = (content : string, methodPatterns : Array<MethodPattern>, filename: string, isExternal = false) => {
     content = sanitize(content);
     const lines = content.split("\n");
 
@@ -59,7 +62,7 @@ const processFile = (content : string, methodPatterns : Array<MethodPattern>) =>
         line = line.trimEnd();
 
         const count = methods.length;
-        const result = processLine(line, method, leftover, methods, methodPatterns);
+        const result = processLine(line, method, leftover, methods, methodPatterns, filename, isExternal);
         if(result.methods.length > count) {
             result.methods[result.methods.length-1].trySetDescription(content);
         }
@@ -121,17 +124,33 @@ const organizeMethods = (methods : Array<Method>) => {
     };
 };
 
-export const compareMethodVersions = (
-    filename : string,
-    document : string
+export const compareMethodVersions = async (
+    uri : vscode.Uri | undefined
 ) => {
+    if(!uri) {
+        throw Error("Unable to read file");
+    }
+    // Get File Data
+    const filename = uri.path;
+    const document = await getFileText(uri);
+
+    // Get Settings
     setMethodPattern(MethodPattern.getPatternsForFile(filename, config) ?? throwError("No method pattern defined for this file type"));
-    if(!methodPatterns) {
-        vscode.window.showInformationMessage("No method pattern found for this file");
-        return;
+
+    // Get Additional Data
+    // Build Versions
+    let methods = processFile(document, methodPatterns, filename);
+
+    // get methods from external files
+    for(const methodPattern of methodPatterns) {
+        if(methodPattern.compareWith) {
+            for(const compareFile of methodPattern.compareWith) {
+                const compareFileText = await getFileText(vscode.Uri.parse(uri.path.substring(0, uri.path.lastIndexOf("/")+1) + compareFile));
+                methods = methods.concat(processFile(compareFileText, methodPatterns, compareFile, true));
+            }
+        }
     }
 
-    const methods = processFile(document, methodPatterns);
     const organizedMethods = organizeMethods(methods);
 
     let before = "";

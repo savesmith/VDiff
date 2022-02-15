@@ -4,17 +4,11 @@ import { compareMethodVersions } from "./comparer/comparer";
 export default class ComparisonProvider implements vscode.TextDocumentContentProvider {
     onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
     onDidChange = this.onDidChangeEmitter.event;
-    document : string | undefined;
+    uri : vscode.Uri | undefined;
 
     
-    public async setDocument(uri : vscode.Uri) {
-        await vscode.workspace.openTextDocument(uri.path).then(doc => {
-            this.document = doc.getText();
-        });
-
-        if(!this.document) {
-            throw new Error("Unable to read file: " + uri.path.toString());
-        }
+    public setDocument(uri : vscode.Uri) {
+        this.uri = uri;
     }
 
     public getUri(scheme : string, uri : vscode.Uri, type : string) : vscode.Uri {
@@ -27,11 +21,8 @@ export default class ComparisonProvider implements vscode.TextDocumentContentPro
      * @param {vscode.Uri} uri - a fake uri
      * @returns {string} - text
      **/
-    public provideTextDocumentContent (uri : vscode.Uri) : string | undefined {
-        if(!this.document) {
-            return "Document not found";
-        }
-        const versions = compareMethodVersions(uri.path, this.document);
+    public async provideTextDocumentContent (uri : vscode.Uri) : Promise<string> {
+        const versions = await compareMethodVersions(this.uri);
 
         if(uri.path.includes("PREV")) {
             return versions?.before;
