@@ -7,6 +7,21 @@ vDiff generates a diff of a file's versioned methods. To perserve legacy code, w
 - Configure your file's versioning by defining its methodPattern in settings. The first perl example shown is configured by default. 
 - Right click on your active editor or a file in the explorer and select _Version Diff_
 
+### Comparing between files
+```
+"vdiff.methodPatterns": [
+  {
+    ...,           
+    "compareWith": [
+        "__greetings__.pm"
+    ],
+  }
+]
+```
+
+![vDiff_Example-1644963679611](https://user-images.githubusercontent.com/21265432/154159635-0cb2dde7-c0aa-4820-bf88-44e7250231b0.gif)
+
+
 ## Settings
 
 ### Method Patterns
