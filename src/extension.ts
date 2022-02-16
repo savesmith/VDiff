@@ -15,8 +15,8 @@ export function activate(context: vscode.ExtensionContext) {
 
         await comparisonProvider.setDocument(document.uri);
 
-        const prevURI = comparisonProvider.getUri(scheme, document.uri, "PREV");
-        const currURI = comparisonProvider.getUri(scheme, document.uri, "CURRENT");
+        const prevURI = comparisonProvider.getUriAndSignalUpdate(scheme, document.uri, "PREV");
+        const currURI = comparisonProvider.getUriAndSignalUpdate(scheme, document.uri, "CURRENT");
 
         await vscode.workspace.openTextDocument(prevURI);
         await vscode.workspace.openTextDocument(currURI);
@@ -28,8 +28,8 @@ export function activate(context: vscode.ExtensionContext) {
         try {
             await comparisonProvider.setDocument(fileUri);
 
-            const prevURI = comparisonProvider.getUri(scheme, fileUri, "PREV");
-            const currURI = comparisonProvider.getUri(scheme, fileUri, "CURRENT");
+            const prevURI = comparisonProvider.getUriAndSignalUpdate(scheme, fileUri, "PREV");
+            const currURI = comparisonProvider.getUriAndSignalUpdate(scheme, fileUri, "CURRENT");
 
             await vscode.workspace.openTextDocument(prevURI);
             await vscode.workspace.openTextDocument(currURI);

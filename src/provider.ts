@@ -11,10 +11,12 @@ export default class ComparisonProvider implements vscode.TextDocumentContentPro
         this.uri = uri;
     }
 
-    public getUri(scheme : string, uri : vscode.Uri, type : string) : vscode.Uri {
+    public getUriAndSignalUpdate(scheme : string, uri : vscode.Uri, type : string) : vscode.Uri {
         const fileExtensionIndex = uri.path.lastIndexOf(".");
         const path = uri.path.substring(0, fileExtensionIndex) + "_" + type + uri.path.substring(fileExtensionIndex);
-        return vscode.Uri.from({ scheme: scheme, path: path });
+        const newUri = vscode.Uri.from({ scheme: scheme, path: path });
+        this.onDidChangeEmitter.fire(newUri);
+        return newUri;
     }
     /**
      *
