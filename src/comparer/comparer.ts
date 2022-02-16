@@ -86,6 +86,7 @@ const organizeMethods = (methods : Array<Method>) => {
             organizedMethods[method.signature.name] = new Array<Method>();
         }
         organizedMethods[method.signature.name].push(method);
+        console.log(organizedMethods);
         organizedMethods[method.signature.name] = organizedMethods[method.signature.name].sort((a,b) => {
             const versionType = a.signature.pattern.versionType;
             if(versionType == "date") {
