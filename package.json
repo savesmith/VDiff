@@ -64,14 +64,6 @@
           "default": [
             {
               "filetype": ".pm",
-              "signature": "sub ([A-Za-z_]*)(\\d{4})(\\d{2})(\\d{2})\\s",
-              "version": "(\\d{4})(\\d{2})(\\d{2})",
-              "versionExtraction": "$2/$3/$1",
-              "description": "(^(?:#.*\\n)+)",
-              "versionType": "number"
-            },
-            {
-              "filetype": ".pm",
               "signature": "public void ([A-Za-z_]*)((\\d{2})_(\\d{2}))\\s",
               "version": "(\\d{2})_(\\d{2})",
               "versionExtraction": "$1/20$2",
