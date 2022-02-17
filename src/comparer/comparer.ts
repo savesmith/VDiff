@@ -100,7 +100,7 @@ const organizeMethods = (methods : Array<Method>) => {
                 return b_num - a_num;
             }
             else if(versionType == "text") {
-                b.signature.version.localeCompare(a.signature.version);
+                return b.signature.version.localeCompare(a.signature.version);
             }
             return -1;
         });
