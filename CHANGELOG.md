@@ -7,10 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2022-02-16
 ### Change
 - MethodPatterns uses name setting
-- Capture groups are not required to be defined for name and version
+- Capture groups are not required in setting regexes.
 
 ### Added
 - Define your signature by referencing your $NAME$ and $VERSION$ set in the file
+- Alerts when unhappy paths occur
 
 ### Fixed
 - Updated settings didn't apply without reload

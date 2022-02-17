@@ -5,4 +5,3 @@ export const debug = (message? : string, ...optionalparams : unknown[]) => {
         console.debug(message, ...optionalparams);
     }
 };
-

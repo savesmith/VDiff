@@ -25,6 +25,9 @@ export default class ComparisonProvider implements vscode.TextDocumentContentPro
      **/
     public async provideTextDocumentContent (uri : vscode.Uri) : Promise<string> {
         const versions = await compareMethodVersions(this.uri);
+        if(versions == null) {
+            throw new Error("Could not provide text document");
+        }
 
         if(uri.path.includes("PREV")) {
             return versions?.before;
@@ -32,6 +35,6 @@ export default class ComparisonProvider implements vscode.TextDocumentContentPro
         if(uri.path.includes("CURRENT")) {
             return versions?.after;
         }
-        return "ERROR!";
+        throw new Error("Could not provide text document");
     }
 }
