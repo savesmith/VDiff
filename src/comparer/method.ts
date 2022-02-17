@@ -1,5 +1,6 @@
 import { createSingleLineComment } from "../util/file-util";
 import { Code } from "./code";
+import { captureAs, getNamedCaptures } from "./regex-util";
 import { Signature } from "./signature";
 
 export class Method {
@@ -22,11 +23,14 @@ export class Method {
     }
 
     trySetDescription(content: string) {
-        const pattern = this.signature.pattern.description+this.signature.raw;
-        const matcher = new RegExp(pattern, "m");
-        const description = content.match(matcher);
-        if(description) {
-            this.description = description[1];
+        if(!this.signature.pattern.description) {
+            return;
+        }
+
+        const pattern = captureAs(this.signature.pattern.description, "description")+this.signature.raw;
+        const values = getNamedCaptures(content, new RegExp(pattern, "m"));
+        if(values) {
+            this.description = values.description;
             return true;
         }
         return false;
@@ -49,7 +53,6 @@ export class Method {
         }
         let comment = info.reduce((a,b) => a + " | " + b);
         return source + (info.length != 0 ? "  " + createSingleLineComment(this.filename, comment) : "");
-
     }
 
     getCode(): string {

@@ -4,7 +4,7 @@ export const sanitize = (content : string) => {
 export const captureAs = (regex: string, name: string) => {
     return "(?<" + name + ">" + regex + ")";
 };
-export const getNamedCaptures = (expr: string, regex: string) => {
+export const getNamedCaptures = (expr: string, regex: string | RegExp) => {
     const match = expr.match(regex);
     const groups = match?.groups;
     if(!match || !groups) {
