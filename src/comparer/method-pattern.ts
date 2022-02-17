@@ -10,12 +10,14 @@ export class MethodPattern {
     versionExtraction: string;
     compareWith: Array<string> | undefined;
     files: Array<string> | string | undefined;
+    name: string;
 
     constructor(
         filetype: string, 
         signature: string,
         version: string,
         versionExtraction: string,
+        name: string,
         description?: string,
         compareWith?: Array<string>,
         versionType?: string,
@@ -30,6 +32,7 @@ export class MethodPattern {
         this.files = files;
         this.versionType = versionType ?? "text";
         this.versionDateFormat = versionDateFormat;
+        this.name = name;
     }
 
     static getPatternsForFile(file : string, config : WorkspaceConfiguration) {

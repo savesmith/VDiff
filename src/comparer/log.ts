@@ -1,4 +1,4 @@
-const DEBUG = 0;
+const DEBUG = 1;
 
 export const debug = (message? : string, ...optionalparams : unknown[]) => {
     if(DEBUG) {
