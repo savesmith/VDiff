@@ -8,7 +8,6 @@ import { MethodPattern } from "./method-pattern";
 import { sanitize} from "./regex-util";
 import { Signature } from "./signature";
 
-const config = vscode.workspace.getConfiguration("vdiff");
 export let methodPatterns : Array<MethodPattern>;
 
 const processLine = (
@@ -86,7 +85,6 @@ const organizeMethods = (methods : Array<Method>) => {
             organizedMethods[method.signature.name] = new Array<Method>();
         }
         organizedMethods[method.signature.name].push(method);
-        console.log(organizedMethods);
         organizedMethods[method.signature.name] = organizedMethods[method.signature.name].sort((a,b) => {
             const versionType = a.signature.pattern.versionType;
             if(versionType == "date") {
@@ -128,6 +126,8 @@ const organizeMethods = (methods : Array<Method>) => {
 export const compareMethodVersions = async (
     uri : vscode.Uri | undefined
 ) => {
+    const config = vscode.workspace.getConfiguration("vdiff");
+    
     if(!uri) {
         throw Error("Unable to read file");
     }
