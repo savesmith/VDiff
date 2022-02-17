@@ -15,7 +15,9 @@ Currently the signature pattern should consist of two capture groups. The first 
 "vdiff.methodPatterns": [
   {
     ...,
-    "signature": "sub ([A-Za-z_]*)(\\d{4}\\d{2}\\d{2})\\s",
+    "signature": "sub $NAME$$VERSION$\\s",
+    "name": "[A-Za-z_]*",
+    "version": "(\\d{4})(\\d{2})(\\d{2})"
   }
 ]
 ```
@@ -25,7 +27,9 @@ Currently the signature pattern should consist of two capture groups. The first 
 "vdiff.methodPatterns": [
   {
     ...,
-    "signature": "public .* ([A-Za-z_]*)_(\\d{2}_\\d{2}_\\d{4})\\(.*\\)"
+    "signature": "public .* $NAME$_$VERSION$\\(.*\\)",
+    "name": "[A-Za-z_]*",
+    "version": "(\\d{2})_(\\d{2})_(\\d{4})
   }
 ]
 ```
@@ -37,16 +41,14 @@ Currently the signature pattern should consist of two capture groups. The first 
   {
     ...,
     "version": "(\\d{4})(\\d{2})(\\d{2})",
-    "versionExtraction:":"Year: $1 | Month: $2 | Day: $3"
+    "formattedVersion:":"Year: $1 | Month: $2 | Day: $3"
   }
 ]
 ```
 ![image](https://user-images.githubusercontent.com/21265432/154384744-403a437e-5b2f-42a4-95bb-2d601c7c218c.png)
 
 ### Version Type
-Setting your version type (and versionDateFormat if the type is date) is very important as it orders the methods determining which one is new and old. The default value is string. 
-
-
+Setting your version type (and versionDateFormat if the type is date) is very important as it orders the methods determining which one is new and old. The default value is text.
 
 
 
@@ -99,9 +101,10 @@ Here is the configuration for the example gif
 "vdiff.methodPatterns": [
   {
     "filetype": ".pm", // The file extension that this pattern applies to
-    "signature": "sub ([A-Za-z_]*)(\\d{4}\\d{2}\\d{2})\\s",// Regex expression that matches a method signature, with a capture group for the name and version
+    "signature": "sub $NAME$$VERSION$\\s", // Regex expression that matches a method signature, with a capture group for the name and version
+    "name": [A-Za-z_]*, // the identifier that matches the method
     "version": "(\\d{4})(\\d{2})(\\d{2})", // Regex expression for grabbing the version, with capture groups that are supplied to "versionExtraction" to add a comment
-    "versionExtraction: "$2/$3/$1", // The template "version" uses to add an inline comment describing the version
+    "formattedVersion: "$2/$3/$1", // The template "version" uses to add an inline comment describing the version
     "description": "(^(?:#.*\\n)+)", // Regex expression for grabbing the comments before a method. 
     "versionType": "number" // the version type, it can be number, text, or date.
   }
