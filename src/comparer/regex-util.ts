@@ -1,23 +1,20 @@
 export const sanitize = (content : string) => {
     return content.replace(/(\r\n)|\r/g, "\n");
 };
-export const extractAndReformat = (
-    expr: string, 
-    pattern : RegExp,
-    template : string) : 
-    {
-        source : string,
-        extract : string
-    } =>
-{
-    const r = expr.match(pattern);
-    if(r == null) {
-        throw new Error("Expression does not match pattern");
+export const captureAs = (regex: string, name: string) => {
+    return "(?<" + name + ">" + regex + ")";
+};
+export const getNamedCaptures = (expr: string, regex: string) => {
+    const match = expr.match(regex);
+    const groups = match?.groups;
+    if(!match || !groups) {
+        return null;
     }
-    const source = expr.replace(pattern, "");
-    const extract = r[0].replace(pattern, template);
-    return {
-        source,
-        extract
-    };
+    return groups;
+};
+export const replaceTemplate = (expr: string, replacements: { [key: string]: string}) => {
+    for(const r in replacements) {
+        expr = expr.replace("$"+r.toUpperCase()+"$", replacements[r]);
+    }
+    return expr;
 };

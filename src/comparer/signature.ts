@@ -1,6 +1,6 @@
 import { MethodPattern } from "./method-pattern";
-import { extractAndReformat } from "./regex-util";
 import * as log from "./log";
+import { captureAs, getNamedCaptures, replaceTemplate } from "./regex-util";
 
 
 export class Signature {
@@ -17,13 +17,10 @@ export class Signature {
     }
     static createFrom(expr: string, methodPatterns: Array<MethodPattern>) {
         for(const pattern of methodPatterns) {
-            const regex = new RegExp(pattern.signature);
-            const match = expr.match(regex);
-            if (match !== null) {
-                const version : string = match[2];
-                const signature = new Signature(match[1], version, expr, pattern);
+            const values = getNamedCaptures(expr, replaceTemplate(pattern.signature, { name: captureAs(pattern.name, "name"), version: captureAs(pattern.version, "version") }));
+            if(values) {
+                const signature = new Signature(values.name, values.version, expr, pattern);
                 log.debug("Signature Created", signature);
-
                 return signature;
             }
         }
@@ -31,8 +28,25 @@ export class Signature {
     }
     extractVersion(expr: string) {
         try {
-            const versionRegex = new RegExp(this.pattern.version);
-            return extractAndReformat(expr, versionRegex, this.pattern.versionExtraction);
+            const sigPattern = replaceTemplate(this.pattern.signature, { name: captureAs(this.pattern.name, "name")});
+            const versionStart = sigPattern.indexOf("$VERSION$");
+            const versionEnd = versionStart + ("$VERSION$").length;
+
+            let re = captureAs(".*" + sigPattern.substring(0, versionStart), "beginning");
+            re += captureAs(this.pattern.version, "version");
+            re += captureAs((versionEnd <= sigPattern.length ? sigPattern.substring(versionEnd) : "") + ".*", "ending");
+
+            const values = getNamedCaptures(expr, re);
+            if(!values) {
+                throw new Error("Expression does not match signature pattern");
+            }
+
+            const signature = values.beginning+values.ending;
+            const version = values.version.replace(new RegExp(this.pattern.version), this.pattern.versionExtraction);
+            return {
+                source: signature,
+                extract: version
+            };
         }
         catch {
             return {
