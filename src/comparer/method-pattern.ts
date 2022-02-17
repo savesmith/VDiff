@@ -1,4 +1,5 @@
 import { WorkspaceConfiguration } from "vscode";
+import { throwUserSettingsError } from "./error-util";
 
 export class MethodPattern {
     filetype: string;
@@ -36,7 +37,22 @@ export class MethodPattern {
     }
 
     static getPatternsForFile(file : string, config : WorkspaceConfiguration) {
-        const patterns = config.get<Array<MethodPattern>>("methodPatterns");
-        return patterns?.filter(pattern => file.includes(pattern.filetype));
+        let patterns = config.get<Array<MethodPattern>>("methodPatterns") ?? [];
+        patterns = patterns.filter(pattern => file.includes(pattern.filetype));
+        for(const pattern of patterns) {
+            MethodPattern.validate(pattern);
+        }
+        if(!patterns.length) {
+            throwUserSettingsError("No valid method pattern configuration found for this file type.");
+        }
+        return patterns;
+    }
+    static validate(pattern: MethodPattern) {
+        if(!["text", "number", "date"].includes(pattern.versionType)) {
+            throwUserSettingsError("Invalid versionType. Must one of the values: text, number, date");
+        }
+        if(pattern.versionType == "date" && !pattern.versionDateFormat) {
+            throwUserSettingsError("versionDateFormat is required with the versionType is date");
+        }
     }
 }

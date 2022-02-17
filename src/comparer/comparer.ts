@@ -2,7 +2,7 @@ import moment = require("moment");
 import * as vscode from "vscode";
 import { getFileText } from "../util/file-util";
 import { Code } from "./code";
-import { throwError } from "./error-util";
+import { throwError, throwUserSettingsError } from "./error-util";
 import { Method } from "./method";
 import { MethodPattern } from "./method-pattern";
 import { sanitize} from "./regex-util";
@@ -131,12 +131,13 @@ export const compareMethodVersions = async (
     if(!uri) {
         throw Error("Unable to read file");
     }
+
     // Get File Data
     const filename = uri.path;
     const document = await getFileText(uri);
 
     // Get Settings
-    setMethodPattern(MethodPattern.getPatternsForFile(filename, config) ?? throwError("No method pattern defined for this file type"));
+    setMethodPattern(MethodPattern.getPatternsForFile(filename, config));
 
     // Get Additional Data
     // Build Versions
@@ -150,6 +151,10 @@ export const compareMethodVersions = async (
                 methods = methods.concat(processFile(compareFileText, methodPatterns, compareFile, true));
             }
         }
+    }
+
+    if(!methods.length) {
+        throwUserSettingsError("No methods that fit configured settings found.");
     }
 
     const organizedMethods = organizeMethods(methods);
