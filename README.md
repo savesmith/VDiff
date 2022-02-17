@@ -7,8 +7,10 @@ vDiff generates a diff of a file's versioned methods. To perserve legacy code, w
 - Configure your file's versioning by defining its methodPattern in settings. The first perl example shown is configured by default. 
 - Right click on your active editor or a file in the explorer and select _Version Diff_
 
+
+
 ### Customizing your signature
-_Currently the signature should consist of two capture groups. The first capture group is expected to be the method's identifier. This is what matches two different versions together. The second is the version._
+Currently the signature pattern should consist of two capture groups. The first capture group is expected to be the method's identifier. This is what matches two different versions together. The second is the version.
 ```
 "vdiff.methodPatterns": [
   {
@@ -29,6 +31,25 @@ _Currently the signature should consist of two capture groups. The first capture
 ```
 ![vDiff_Example-1645056973466](https://user-images.githubusercontent.com/21265432/154379420-4abf8fd8-9540-41bc-85f5-250ac768113a.gif)
 
+### Extracting your version
+```
+"vdiff.methodPatterns": [
+  {
+    ...,
+    "version": "(\\d{4})(\\d{2})(\\d{2})",
+    "versionExtraction:":"Year: $1 | Month: $2 | Day: $3"
+  }
+]
+```
+![image](https://user-images.githubusercontent.com/21265432/154384744-403a437e-5b2f-42a4-95bb-2d601c7c218c.png)
+
+### Version Type
+Setting your version type (and versionDateFormat if the type is date) is very important as it orders the methods determining which one is new and old. The default value is string. 
+
+
+
+
+
 ### Comparing between files
 ```
 "vdiff.methodPatterns": [
@@ -41,6 +62,31 @@ _Currently the signature should consist of two capture groups. The first capture
 ]
 ```
 ![vDiff_Example-1644963679611](https://user-images.githubusercontent.com/21265432/154159635-0cb2dde7-c0aa-4820-bf88-44e7250231b0.gif)
+
+### Using Regex
+Regex is a sequence of characters that specifies a search pattern in text. It is used heavily in this extension to find versioned methods and to extract information about them. If you are new to regex, I would recommend using a regex testing website like https://regex101.com/ to test if your regex matches your methods' signatures when configuring your settings.
+
+Here is also a cheat sheet: https://quickref.me/regex#regex-in-javascript
+
+The regex expression in your settings should be for javascript regex. Not the language you are trying to parse. 
+
+The regex in the settings comes in as a string, so the proper escape characters must be included. That is why in the examples you will see "\\d" instead of "\d". 
+
+Here are some basics for understanding the README:
+
+#### Matching a single character
+- A-Z: Matches all uppercase alphabet symbols
+- a-z: Matches all lowercase alphabet symbols
+- 0-9: Matches all number characters
+- \[xy\]: Matches one of the characters in the brackets
+- \[A-Za-z\]: Matches either a uppercase letter or a lowercase letter. NOT a range. 
+- \[A-Za-z0-9_\]: Matches a uppercase letter, or a lowercase letter, or a number, or an underscore. A good definition for characters normally allowed in a method name.
+### Matching multiple characters
+- \*: Matches 0 or more of the preceding character (e.g. a* matches "aaa" or "")
+- \+: Matches 1 or more of the preceding character (e.g. a+ matches "aaa" or "a" but not "")
+### Capture Groups
+- (): creates a capture group. hello(\d*) will match hello123 and will capture 123. $1 would be 123 in a setting like _versionExtraction_.
+- (?:): a non capturing group. You may need to use a group to define repitition in a pattern, but you don't want to capture it. hello(?:\d*) would match hello123 but have no capture groups. 
 
 
 ## Settings
