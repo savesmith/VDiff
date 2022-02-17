@@ -50,6 +50,31 @@ Currently the signature pattern should consist of two capture groups. The first 
 ### Version Type
 Setting your version type (and versionDateFormat if the type is date) is very important as it orders the methods determining which one is new and old. The default value is text.
 
+![image](https://user-images.githubusercontent.com/21265432/154415134-f2792d5f-6387-4748-a3ec-1f4b4ec7ee87.png)
+
+```
+"vdiff.methodPatterns": [
+  {
+    ...,
+    "versionType": "number"
+  }
+]
+```
+![image](https://user-images.githubusercontent.com/21265432/154415046-ddf657d8-dc31-40a0-a134-d442ffd1f112.png)
+
+```
+"vdiff.methodPatterns": [
+  {
+    ...,
+    "versionType": "date",
+    "versionDateFormat": " "mm_yyyy" // required with date versionType
+  }
+]
+```
+![image](https://user-images.githubusercontent.com/21265432/154415618-d5187daa-0839-403a-aa6e-0ce7c670cb0d.png)
+
+
+
 
 
 ### Comparing between files
@@ -73,23 +98,6 @@ Here is also a cheat sheet: https://quickref.me/regex#regex-in-javascript
 The regex expression in your settings should be for javascript regex. Not the language you are trying to parse. 
 
 The regex in the settings comes in as a string, so the proper escape characters must be included. That is why in the examples you will see "\\d" instead of "\d". 
-
-Here are some basics for understanding the README:
-
-#### Matching a single character
-- A-Z: Matches all uppercase alphabet symbols
-- a-z: Matches all lowercase alphabet symbols
-- 0-9: Matches all number characters
-- \[xy\]: Matches one of the characters in the brackets
-- \[A-Za-z\]: Matches either a uppercase letter or a lowercase letter. NOT a range. 
-- \[A-Za-z0-9_\]: Matches a uppercase letter, or a lowercase letter, or a number, or an underscore. A good definition for characters normally allowed in a method name.
-### Matching multiple characters
-- \*: Matches 0 or more of the preceding character (e.g. a* matches "aaa" or "")
-- \+: Matches 1 or more of the preceding character (e.g. a+ matches "aaa" or "a" but not "")
-### Capture Groups
-- (): creates a capture group. hello(\d*) will match hello123 and will capture 123. $1 would be 123 in a setting like _versionExtraction_.
-- (?:): a non capturing group. You may need to use a group to define repitition in a pattern, but you don't want to capture it. hello(?:\d*) would match hello123 but have no capture groups. 
-
 
 ## Settings
 
