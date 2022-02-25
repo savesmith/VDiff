@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
 export const throwError = (errorMessage: string): never => {
+    vscode.window.showErrorMessage(errorMessage);
     throw new Error(errorMessage);
 };
 
