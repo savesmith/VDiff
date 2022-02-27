@@ -11,5 +11,5 @@ export const throwUserSettingsError = (errorMessage: string): never => {
             vscode.commands.executeCommand("workbench.action.openSettingsJson");
         }
     });
-    throw new Error("Invalid User Settings");
+    throw new Error("Invalid User Settings: "+ errorMessage);
 };

@@ -1,15 +1,10 @@
 import * as assert from 'assert';
-import { SourceCode } from 'eslint';
-
+import { compareMethodVersions } from '../../comparer/comparer';
 const testFolder = "../../../test_data";
 import fs = require('fs');
 import path = require('path');
 
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 import * as vscode from 'vscode';
-// import * as myExtension from '../../extension';
-import * as vdiff from '../../extension';
 
 suite('Extension Test Suite', () => {
     vscode.window.showInformationMessage('Start all tests.');
@@ -22,9 +17,20 @@ suite('Extension Test Suite', () => {
     const testFolderPath = path.join(__dirname, testFolder);
     const tests = fs.readdirSync(testFolderPath);
     tests.forEach(test_folder => {
-        test('File Is Diffable', async () => {
-            const uri = path.join(testFolderPath, test_folder, "in.t");
-            await vscode.commands.executeCommand("vdiff.compareSelectedFileVersions", uri);
+        test(test_folder + ' diffs correctly', async () => {
+            const test_file_path = path.join(testFolderPath, test_folder);
+
+            // Get Extension
+            let extension = fs.readdirSync(test_file_path)[0];
+            extension = extension.substring(extension.lastIndexOf('.'));
+            
+            const uri = vscode.Uri.file(path.join(test_file_path, "in" + extension));
+            const versions = await compareMethodVersions(uri);
+
+            const before = fs.readFileSync(path.join(test_file_path, "out_before" + extension)).toString();
+            const after = fs.readFileSync(path.join(test_file_path, "out_after" + extension)).toString();
+            assert.strictEqual(versions.before, before, 'Expected Before Output');
+            assert.strictEqual(versions.after, after, 'Expected After Output');
         });
     });
 });

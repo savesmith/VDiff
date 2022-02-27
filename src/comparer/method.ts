@@ -58,7 +58,7 @@ export class Method {
     getCode(): string {
         let result = "";
         if(this.description) {
-            result += "\n" + this.description;
+            result += this.description;
         }
         result += this.code.code;
         return result;

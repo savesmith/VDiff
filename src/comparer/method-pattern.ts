@@ -8,7 +8,7 @@ export class MethodPattern {
     version: string;
     versionType: string; // date, number, text
     versionDateFormat: string | undefined; // 'mm_yyyy'
-    versionExtraction: string;
+    formattedVersion: string;
     compareWith: Array<string> | undefined;
     files: Array<string> | string | undefined;
     name: string;
@@ -17,7 +17,7 @@ export class MethodPattern {
         filetype: string, 
         signature: string,
         version: string,
-        versionExtraction: string,
+        formattedVersion: string,
         name: string,
         description?: string,
         compareWith?: Array<string>,
@@ -28,7 +28,7 @@ export class MethodPattern {
         this.signature = signature;
         this.description =  description;
         this.version =  version;
-        this.versionExtraction = versionExtraction;
+        this.formattedVersion = formattedVersion;
         this.compareWith = compareWith;
         this.files = files;
         this.versionType = versionType ?? "text";
