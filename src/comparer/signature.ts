@@ -42,7 +42,7 @@ export class Signature {
             }
 
             const signature = values.beginning+values.ending;
-            const version = values.version.replace(new RegExp(this.pattern.version), this.pattern.versionExtraction);
+            const version = values.version.replace(new RegExp(this.pattern.version), this.pattern.formattedVersion) + "\n";
             return {
                 source: signature,
                 extract: version

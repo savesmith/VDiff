@@ -11,7 +11,6 @@ export class Code {
 
         let newCode = "";
         let index = 0;
-        const addNewLine = this.started;
         for(const character of code) {
             newCode += character;
             if(character === "{") {
@@ -23,15 +22,13 @@ export class Code {
             }
             if(this.started && this.braces === 0) {
                 this.completed = true;
-                newCode += "\n";
+                newCode += (index+1 != code.length ? code.substring(index+1) : "");
+                break;
             }
             index +=1;
         }
-        this.code += (addNewLine ? "\n" : "") + newCode;
+        this.code += newCode;
 
-        if(index !== code.length) {
-            return this.code.substring(index);
-        }
         return "";
     }
     toString() {

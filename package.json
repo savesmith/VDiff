@@ -10,7 +10,8 @@
     "diff",
     "compare",
     "vdiff",
-    "legacy"
+    "legacy",
+    "partial diff"
   ],
   "displayName": "vDiff",
   "description": "Generates a diff for a file's versioned methods. (e.g. hello2020_01_01 -> hello2022_02_01)",
@@ -77,7 +78,8 @@
               "name":"[A-Za-z_]*",
               "version": "(\\d{4})(\\d{2})(\\d{2})",
               "formattedVersion": "$2/$3/$1",
-              "description": "(^(?:#.*\\n)+)"
+              "description": "(^(?:#.*\\n)+)",
+              "versionType": "number"
             }
           ]
         }

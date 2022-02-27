@@ -2,7 +2,7 @@ import moment = require("moment");
 import * as vscode from "vscode";
 import { getFileText } from "../util/file-util";
 import { Code } from "./code";
-import { throwError, throwUserSettingsError } from "./error-util";
+import { throwUserSettingsError } from "./error-util";
 import { Method } from "./method";
 import { MethodPattern } from "./method-pattern";
 import { sanitize} from "./regex-util";
@@ -57,14 +57,14 @@ const processFile = (content : string, methodPatterns : Array<MethodPattern>, fi
     let leftover = "";
 
     for(const l in lines) {
-        let line = lines[l];
-        line = line.trimEnd();
+        const line = lines[l] + "\n";
 
         const count = methods.length;
         const result = processLine(line, method, leftover, methods, methodPatterns, filename, isExternal);
         if(result.methods.length > count) {
             result.methods[result.methods.length-1].trySetDescription(content);
         }
+
         method = result.method;
         methods = result.methods;
         leftover = result.leftover;
