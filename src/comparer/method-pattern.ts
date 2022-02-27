@@ -1,5 +1,6 @@
 import { WorkspaceConfiguration } from "vscode";
 import { throwUserSettingsError } from "./error-util";
+import preconfig from "../preconfig.json";
 
 export class MethodPattern {
     filetype: string;
@@ -38,6 +39,7 @@ export class MethodPattern {
 
     static getPatternsForFile(file : string, config : WorkspaceConfiguration) {
         let patterns = config.get<Array<MethodPattern>>("methodPatterns") ?? [];
+        patterns = patterns.concat(preconfig.methodPatterns as Array<MethodPattern>);
         patterns = patterns.filter(pattern => file.includes(pattern.filetype));
         for(const pattern of patterns) {
             MethodPattern.validate(pattern);
