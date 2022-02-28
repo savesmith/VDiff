@@ -17,7 +17,7 @@
   "description": "Generates a diff for a file's versioned methods. (e.g. hello2020_01_01 -> hello2022_02_01)",
   "icon": "Vdiff-Icon.png",
   "publisher": "savysolutions",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "engines": {
     "vscode": "^1.64.0"
   },
