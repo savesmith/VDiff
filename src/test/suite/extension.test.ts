@@ -5,6 +5,7 @@ import fs = require('fs');
 import path = require('path');
 
 import * as vscode from 'vscode';
+import { standardize } from '../../comparer/regex-util';
 
 suite('Extension Test Suite', () => {
     vscode.window.showInformationMessage('Start all tests.');
@@ -27,8 +28,9 @@ suite('Extension Test Suite', () => {
             const uri = vscode.Uri.file(path.join(test_file_path, "in" + extension));
             const versions = await compareMethodVersions(uri);
 
-            const before = fs.readFileSync(path.join(test_file_path, "out_before" + extension)).toString();
-            const after = fs.readFileSync(path.join(test_file_path, "out_after" + extension)).toString();
+            const before = standardize(fs.readFileSync(path.join(test_file_path, "out_before" + extension)).toString());
+            const after = standardize(fs.readFileSync(path.join(test_file_path, "out_after" + extension)).toString());
+
             assert.strictEqual(versions.before, before, 'Expected Before Output');
             assert.strictEqual(versions.after, after, 'Expected After Output');
         });

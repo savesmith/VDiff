@@ -4,6 +4,29 @@ export class Code {
     code = "";
     completed = false;
 
+    addSignature(code: string) {
+        let newCode = "";
+        let oneLiner = false;
+        for(const character of code) {
+            newCode += character;
+            if(character === "{") {
+                this.braces += 1;
+                oneLiner = true;
+            }
+            if(character === "}") {
+                this.braces -= 1;
+            }
+        }
+        oneLiner = oneLiner && this.braces === 0;
+        if(oneLiner) {
+            this.completed = true;
+        }
+        else if(this.braces > 0) {
+            this.started = true;
+        }
+
+        this.code += newCode;
+    }
     addCode(code: string) {
         if(this.completed) {
             throw new Error("Code is completed");

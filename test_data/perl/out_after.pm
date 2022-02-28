@@ -1,3 +1,10 @@
+#####
+# After API Call 
+#####
+sub apiCall: ExposeAPIMethod(+{}) {  # 02/03/2022
+    print("after api call")
+}
+
 ###
 # After
 ###

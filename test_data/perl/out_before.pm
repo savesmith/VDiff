@@ -1,3 +1,10 @@
+#####
+# Before API Call 
+#####
+sub apiCall: ExposeAPIMethod(+{}) {  # 05/11/2020
+    print("before api call")
+}
+
 ####
 # Before
 ####
