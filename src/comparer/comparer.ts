@@ -5,7 +5,7 @@ import { Code } from "./code";
 import { throwUserSettingsError } from "./error-util";
 import { Method } from "./method";
 import { MethodPattern } from "./method-pattern";
-import { sanitize} from "./regex-util";
+import { sanitize, standardize} from "./regex-util";
 import { Signature } from "./signature";
 
 export let methodPatterns : Array<MethodPattern>;
@@ -27,7 +27,8 @@ const processLine = (
         const signature = Signature.createFrom(line, methodPatterns);
         if(signature) {
             method = new Method(signature, new Code(), filename, isExternal);
-            line = method.reformatSignature(line);
+            method.addReformatedSignature(line);
+            line = "";
         }
     }
 
@@ -49,7 +50,7 @@ const processLine = (
 };
 
 const processFile = (content : string, methodPatterns : Array<MethodPattern>, filename: string, isExternal = false) => {
-    content = sanitize(content);
+    content = standardize(content);
     const lines = content.split("\n");
 
     let methods = new Array<Method>();
@@ -169,6 +170,8 @@ export const compareMethodVersions = async (
             before += method[1].getCode();
         }
     }
+    before = before.trimEnd();
+    after = after.trimEnd();
     return {
         before,
         after

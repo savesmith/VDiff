@@ -1,4 +1,4 @@
-export const sanitize = (content : string) => {
+export const standardize = (content : string) => {
     return content.replace(/(\r\n)|\r/g, "\n");
 };
 export const captureAs = (regex: string, name: string) => {
@@ -16,5 +16,10 @@ export const replaceTemplate = (expr: string, replacements: { [key: string]: str
     for(const r in replacements) {
         expr = expr.replace("$"+r.toUpperCase()+"$", replacements[r]);
     }
+    return expr;
+};
+export const sanitize = (expr: string) => {
+    let re = /[-.+*?[^\]$(){}=!<>|:\\]/gi;
+    expr = expr.replace(re, "\\$&");
     return expr;
 };

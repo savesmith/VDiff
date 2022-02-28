@@ -2,6 +2,15 @@
     "methodPatterns": [
         {
             "filetype": ".pm",
+            "signature": "sub $NAME$$VERSION$\\s*:\\s*ExposeAPIMethod\\(\\+{}\\)",
+            "name":"[A-Za-z_]*",
+            "version": "(\\d{4})(\\d{2})(\\d{2})",
+            "formattedVersion": "$2/$3/$1",
+            "description": "(^(?:#.*\\n)+)",
+            "versionType": "number"
+        },
+        {
+            "filetype": ".pm",
             "signature": "sub $NAME$$VERSION$",
             "name":"[A-Za-z_]*",
             "version": "(\\d{4})(\\d{2})(\\d{2})",
